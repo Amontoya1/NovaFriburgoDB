@@ -11,96 +11,96 @@ namespace NovaFriburgoDB.Controllers
     [Route("api/[controller]")]
     [ApiController]
     public class ChaptersController : ControllerBase
-{
-    private readonly NovaFriburgoDBContext _context;
-
-    public ChaptersController(NovaFriburgoDBContext context)
     {
-        _context = context;
-    }
+        private readonly NovaFriburgoDBContext _context;
 
-    // GET: api/Chapters
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<Chapter>>> GetChapters()
-    {
-        return await _context.Chapters.ToListAsync();
-    }
-
-    // GET: api/Chapters/5
-    [HttpGet("{id}")]
-    public async Task<ActionResult<Chapter>> GetChapter(int id)
-    {
-        var chapter = await _context.Chapters.FindAsync(id);
-
-        if (chapter == null)
+        public ChaptersController(NovaFriburgoDBContext context)
         {
-            return NotFound();
+            _context = context;
         }
 
-        return chapter;
-    }
-
-    // PUT: api/Chapters/5
-    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [HttpPut("{id}")]
-    public async Task<IActionResult> PutChapter(int id, Chapter chapter)
-    {
-        if (id != chapter.Id)
+        // GET: api/Chapters
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Chapter>>> GetChapters()
         {
-            return BadRequest();
+            return await _context.Chapters.ToListAsync();
         }
 
-        _context.Entry(chapter).State = EntityState.Modified;
+        // GET: api/Chapters/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Chapter>> GetChapter(int id)
+        {
+            var chapter = await _context.Chapters.FindAsync(id);
 
-        try
-        {
-            await _context.SaveChangesAsync();
-        }
-        catch (DbUpdateConcurrencyException)
-        {
-            if (!ChapterExists(id))
+            if (chapter == null)
             {
                 return NotFound();
             }
-            else
-            {
-                throw;
-            }
+
+            return chapter;
         }
 
-        return NoContent();
-    }
-
-    // POST: api/Chapters
-    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [HttpPost]
-    public async Task<ActionResult<Chapter>> PostChapter(Chapter chapter)
-    {
-        _ = _context.Chapters.Add(chapter);
-        await _context.SaveChangesAsync();
-
-        return CreatedAtAction("GetChapter", new { id = chapter.Id }, chapter);
-    }
-
-    // DELETE: api/Chapters/5
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteChapter(int id)
-    {
-        var chapter = await _context.Chapters.FindAsync(id);
-        if (chapter == null)
+        // PUT: api/Chapters/5
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutChapter(int id, Chapter chapter)
         {
-            return NotFound();
+            if (id != chapter.Id)
+            {
+                return BadRequest();
+            }
+
+            _context.Entry(chapter).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!ChapterExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
         }
 
-        _context.Chapters.Remove(chapter);
-        await _context.SaveChangesAsync();
+        // POST: api/Chapters
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost]
+        public async Task<ActionResult<Chapter>> PostChapter(Chapter chapter)
+        {
+            _ = _context.Chapters.Add(chapter);
+            await _context.SaveChangesAsync();
 
-        return NoContent();
-    }
+            return CreatedAtAction("GetChapter", new { id = chapter.Id }, chapter);
+        }
 
-    private bool ChapterExists(int id)
-    {
-        return _context.Chapters.Any(e => e.Id == id);
+        // DELETE: api/Chapters/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteChapter(int id)
+        {
+            var chapter = await _context.Chapters.FindAsync(id);
+            if (chapter == null)
+            {
+                return NotFound();
+            }
+
+            _context.Chapters.Remove(chapter);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        private bool ChapterExists(int id)
+        {
+            return _context.Chapters.Any(e => e.Id == id);
+        }
     }
-}
 }

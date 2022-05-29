@@ -6,7 +6,7 @@ namespace NovaFriburgoDB.DataAccess
     public class NovaFriburgoDBContext : DbContext
     {
         public NovaFriburgoDBContext(DbContextOptions<NovaFriburgoDBContext> options) : base(options)
-        { 
+        {
         }
 
 

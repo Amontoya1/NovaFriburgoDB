@@ -6,7 +6,7 @@ using NovaFriburgoDB.DataAccess;
 using NovaFriburgoDB.Models.DataModels;
 namespace NovaFriburgoDB.Controllers
 {
-  [Route("api/[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class StudentsController : ControllerBase
     {
