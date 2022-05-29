@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NovaFriburgoDB.DataAccess;
 using NovaFriburgoDB.Models.DataModels;
+using NovaFriburgoDB.Services;
+
 namespace NovaFriburgoDB.Controllers
 {
     [Route("api/[controller]")]
@@ -12,13 +14,12 @@ namespace NovaFriburgoDB.Controllers
     {
         private readonly NovaFriburgoDBContext _context;
         // Service
-        //private readonly IStudentsService _studentsService;
+        private readonly IStudentsService _studentsService;
 
-        //public StudentsController(NovaFriburgoDBContext context, IStudentsService studentsService)
-        public StudentsController(NovaFriburgoDBContext context)
+        public StudentsController(NovaFriburgoDBContext context, IStudentsService studentsService)
         {
             _context = context;
-            //_studentsService = studentsService;
+            _studentsService = studentsService;
         }
 
         // GET: api/Students
