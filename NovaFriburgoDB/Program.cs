@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using NovaFriburgoDB;
 using NovaFriburgoDB.DataAccess;
 using NovaFriburgoDB.Services;
 
@@ -13,7 +14,7 @@ var connectionString = builder.Configuration.GetConnectionString(CONNECTIONNAME)
 builder.Services.AddDbContext<NovaFriburgoDBContext>(options => options.UseSqlServer(connectionString));
 
 // 7. Add Service of JWT Autorization
-//builder.Services.AddJwtTokenServices(builder.Configuration);
+builder.Services.AddJwtTokenServices(builder.Configuration);
 
 // Add services to the container.
 builder.Services.AddControllers();
@@ -31,8 +32,7 @@ builder.Services.AddAuthorization(options =>
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
-{
-
+    {
     // We define the Security for authorzation
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
@@ -46,7 +46,6 @@ builder.Services.AddSwaggerGen(options =>
 
     options.AddSecurityRequirement(new OpenApiSecurityRequirement
         {
-
             {
                 new OpenApiSecurityScheme
                     {
