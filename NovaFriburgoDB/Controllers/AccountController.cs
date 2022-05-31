@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using NovaFriburgoDB.DataAccess;
+using NovaFriburgoDB.Entities;
 using NovaFriburgoDB.Helpers;
 using NovaFriburgoDB.Models.DataModels;
 
@@ -13,11 +15,14 @@ namespace NovaFriburgoDB.Controllers
     {
         private readonly NovaFriburgoDBContext _context;
         private readonly JwtSettings _jwtSettings;
+        private readonly IStringLocalizer<AccountController> _stringLocalizer;
 
-        public AccountController(NovaFriburgoDBContext context, JwtSettings jwtSettings)
+        public AccountController(NovaFriburgoDBContext context, JwtSettings jwtSettings, IStringLocalizer<AccountController> stringLocalizer, IStringLocalizer<SharedResource> sharedResourceLocalizer)
         {
             _context = context;
             _jwtSettings = jwtSettings;
+            _stringLocalizer = stringLocalizer;
+            _sharedResourceLocalizer = sharedResourceLocalizer;
         }
 
         // Example Users
@@ -54,6 +59,8 @@ namespace NovaFriburgoDB.Controllers
                                   where user.Name == userLogin.UserName && user.Password == userLogin.Password
                                   select user).FirstOrDefault();
 
+                var hello = _stringLocalizer.GetString("Welcome").Value ?? String.Empty;
+
 
                 // TODO: Change to searchUser
                 // var Valid = Logins.Any(user => user.Name.Equals(userLogin.UserName, StringComparison.OrdinalIgnoreCase));
@@ -76,12 +83,21 @@ namespace NovaFriburgoDB.Controllers
                 {
                     return BadRequest("Wrong Password");
                 }
-                return Ok(Token);
+
+                return Ok( Token, new
+                {
+                    HelloName = hello,
+                });
             }
             catch (Exception ex)
             {
                 throw new Exception("GetToken Error", ex);
             }
+        }
+
+        private IActionResult Ok(UserTokens token, object value)
+        {
+            throw new NotImplementedException();
         }
 
         [HttpGet]

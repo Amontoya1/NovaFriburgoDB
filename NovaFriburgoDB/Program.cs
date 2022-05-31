@@ -16,6 +16,9 @@ builder.Services.AddDbContext<NovaFriburgoDBContext>(options => options.UseSqlSe
 // 7. Add Service of JWT Autorization
 builder.Services.AddJwtTokenServices(builder.Configuration);
 
+//  LOCALIZATION
+builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+
 // Add services to the container.
 builder.Services.AddControllers();
 
@@ -75,6 +78,16 @@ builder.Services.AddCors(options =>
 
 //services antes del build
 var app = builder.Build();
+
+// SUPPORTED CULTURES
+var supportedCultures = new[] { "en-US", "es-ES", "fr-FR", "pt-BR" }; // USA's english, Spain's Spanish and Portugues's Brasil
+var localizationOptions = new RequestLocalizationOptions()
+    .SetDefaultCulture(supportedCultures[0]) // English by default
+    .AddSupportedCultures(supportedCultures) // Add all supported cultures
+    .AddSupportedUICultures(supportedCultures); // Add supported cultures to UI;
+
+//  ADD LOCALIZATION to App
+app.UseRequestLocalization(localizationOptions);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
