@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
 
 namespace NovaFriburgoDB.Models.DataModels
 {
@@ -29,7 +30,6 @@ namespace NovaFriburgoDB.Models.DataModels
         public Chapter Chapter { get; set; } = new Chapter();
 
         [Required]
-        public ICollection<Student> Students { get; set; } = new List<Student>();
-
+        public ICollection<Student> Students { get; set; }
     }
 }

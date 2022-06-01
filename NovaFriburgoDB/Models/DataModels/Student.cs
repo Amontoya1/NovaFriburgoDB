@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace NovaFriburgoDB.Models.DataModels
 {
@@ -10,8 +11,8 @@ namespace NovaFriburgoDB.Models.DataModels
         public string LastName { get; set; } = string.Empty;
         [Required]
         public DateTime Dob { get; set; }
+        public ICollection<Course> Courses { get; set; }
 
-        public ICollection<Course> Courses { get; set; } = new List<Course>();
 
     }
 }

@@ -7,8 +7,8 @@ namespace NovaFriburgoDB.DataAccess
     {
         public NovaFriburgoDBContext(DbContextOptions<NovaFriburgoDBContext> options) : base(options)
         {
+          
         }
-
 
         // Add DbSets (Tables of our Data base)
         public DbSet<User>? Users { get; set; }

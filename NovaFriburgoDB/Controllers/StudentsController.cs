@@ -13,7 +13,6 @@ namespace NovaFriburgoDB.Controllers
     public class StudentsController : ControllerBase
     {
         private readonly NovaFriburgoDBContext _context;
-        // Service
         private readonly IStudentsService _studentsService;
 
         public StudentsController(NovaFriburgoDBContext context, IStudentsService studentsService)
@@ -24,39 +23,50 @@ namespace NovaFriburgoDB.Controllers
 
         // GET: api/Students
         [HttpGet]
+
         public async Task<ActionResult<IEnumerable<Student>>> GetStudents()
         {
-            return await _context.Students.ToListAsync();
+           
+            return await _context.Students
+                .Include(c => c.Courses)
+                .ToListAsync();
         }
 
-        // GET: api/Students/5
+        //GET: api/Students/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Student>> GetStudent(int id)
+        public ActionResult<Student> GetStudent(int id)
         {
-            var student = await _context.Students.FindAsync(id);
+            var searchStudent = (from student in _context.Students
+                                 where student.Id.Equals(id)
+                                 select student).FirstOrDefault();
 
-            if (student == null)
+            if (searchStudent == null)
             {
                 return NotFound();
             }
 
-            return student;
+            return searchStudent;
         }
 
         // PUT: api/Students/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutStudent(int id, Student student)
+        public async Task<IActionResult> PutStudentCourse(int id, int idCourse)
         {
-            if (id != student.Id)
+            var student = await _context.Students
+                .Include(c => c.Courses)
+                .FirstOrDefaultAsync(s => s.Id == id);
+            
+            if (id != student.Id || student == null)
             {
                 return BadRequest();
             }
-
-            _context.Entry(student).State = EntityState.Modified;
-
+            var courses = await _context.Courses.FirstOrDefaultAsync(c => c.Id == idCourse);
+            student.Courses.Add(courses);
+           
             try
             {
+               _context.Students.Update(student);
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
@@ -70,6 +80,8 @@ namespace NovaFriburgoDB.Controllers
                     throw;
                 }
             }
+
+            //return Ok(searchCourseStudent);
 
             return NoContent();
         }

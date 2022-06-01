@@ -3,6 +3,7 @@ using Microsoft.OpenApi.Models;
 using NovaFriburgoDB;
 using NovaFriburgoDB.DataAccess;
 using NovaFriburgoDB.Services;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,7 +21,11 @@ builder.Services.AddJwtTokenServices(builder.Configuration);
 builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
 
 // Add services to the container.
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(o =>
+{
+    o.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+    o.JsonSerializerOptions.MaxDepth = 0;
+});
 
 // 4. Add Custom Services (folder Services)
 builder.Services.AddScoped<IStudentsService, StudentsService>();
@@ -34,6 +39,7 @@ builder.Services.AddAuthorization(options =>
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+//builder.Services.AddMvc().AddJsonOptions();
 builder.Services.AddSwaggerGen(options =>
     {
     // We define the Security for authorzation

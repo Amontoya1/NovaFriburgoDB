@@ -9,6 +9,9 @@ using NovaFriburgoDB.Models.DataModels;
 
 namespace NovaFriburgoDB.Controllers
 {
+    /// <summary>
+    /// Account Controller
+    /// </summary>
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class AccountController : ControllerBase
@@ -16,6 +19,7 @@ namespace NovaFriburgoDB.Controllers
         private readonly NovaFriburgoDBContext _context;
         private readonly JwtSettings _jwtSettings;
         private readonly IStringLocalizer<AccountController> _stringLocalizer;
+        private readonly IStringLocalizer<SharedResource> _sharedResourceLocalizer;
 
         public AccountController(NovaFriburgoDBContext context, JwtSettings jwtSettings, IStringLocalizer<AccountController> stringLocalizer, IStringLocalizer<SharedResource> sharedResourceLocalizer)
         {
@@ -60,15 +64,11 @@ namespace NovaFriburgoDB.Controllers
                                   select user).FirstOrDefault();
 
                 var hello = _stringLocalizer.GetString("Welcome").Value ?? String.Empty;
-
-
-                // TODO: Change to searchUser
-                // var Valid = Logins.Any(user => user.Name.Equals(userLogin.UserName, StringComparison.OrdinalIgnoreCase));
+                var todayIs = string.Format(_sharedResourceLocalizer.GetString("TodayIs"), DateTime.Now.ToLongDateString());
 
                 if (searchUser != null)
                 {
-                    // var user = Logins.FirstOrDefault(user => user.Name.Equals(userLogin.UserName, StringComparison.OrdinalIgnoreCase));
-
+                  
                     Token = JwtHelpers.GenTokenKey(new UserTokens()
                     {
                         UserName = searchUser.Name,
@@ -77,17 +77,13 @@ namespace NovaFriburgoDB.Controllers
                         GuidId = Guid.NewGuid(),
 
                     }, _jwtSettings);
-
                 }
                 else
                 {
                     return BadRequest("Wrong Password");
                 }
 
-                return Ok( Token, new
-                {
-                    HelloName = hello,
-                });
+                return Ok(Token);
             }
             catch (Exception ex)
             {
@@ -95,10 +91,6 @@ namespace NovaFriburgoDB.Controllers
             }
         }
 
-        private IActionResult Ok(UserTokens token, object value)
-        {
-            throw new NotImplementedException();
-        }
 
         [HttpGet]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrator")]
